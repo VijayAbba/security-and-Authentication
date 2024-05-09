@@ -34,7 +34,7 @@ passport.use(new Strategy(AUTH_OPTIONS, verifyCalback));
 // Save the session to the cookie
 passport.serializeUser((user, done) => {
   done(null, user.id);
-});
+}); // ? //
 
 // Read the session form the cookie
 passport.deserializeUser((id, done) => {
@@ -42,7 +42,7 @@ passport.deserializeUser((id, done) => {
   //   done(null, user)
   // })
   done(null, id);
-});
+}); // ? //
 
 const app = express();
 
@@ -54,10 +54,10 @@ app.use(
     maxAge: 24 * 60 * 60 * 1000,
     keys: [config.COOKIE_KEY_1, config.COOKIE_KEY_2],
   })
-);
+); // ? //
 
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session()); // ? //
 
 function checkLoggedIn(req, res, next) {
   console.log("current user is : " + req.user);
@@ -89,7 +89,10 @@ app.get(
   }
 );
 
-app.get("/auth/logout", (req, res) => {});
+app.get("/auth/logout", (req, res) => {
+  req.logout();
+  return res.redirect("/");
+});
 
 app.get("/secret", checkLoggedIn, (req, res) => {
   return res.send("Your personal secret value is 42!");
