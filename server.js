@@ -33,12 +33,15 @@ passport.use(new Strategy(AUTH_OPTIONS, verifyCalback));
 
 // Save the session to the cookie
 passport.serializeUser((user, done) => {
-  done(null, user);
+  done(null, user.id);
 });
 
 // Read the session form the cookie
-passport.deserializeUser((obj, done) => {
-  done(null, obj);
+passport.deserializeUser((id, done) => {
+  // User.findById(id).then(user=> {
+  //   done(null, user)
+  // })
+  done(null, id);
 });
 
 const app = express();
@@ -71,7 +74,7 @@ app.get(
   passport.authenticate("google", {
     scope: ["email"],
   })
-); // 2.Not Understood
+);
 
 app.get(
   "/auth/google/callback",
@@ -83,7 +86,7 @@ app.get(
   (req, res) => {
     console.log("Google called us back!");
   }
-); // 1.Not Understood
+);
 
 app.get("/auth/logout", (req, res) => {});
 
